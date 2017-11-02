@@ -39,4 +39,5 @@ public class PetDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
-}
+
+}//end of PetDbHelper class
