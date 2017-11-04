@@ -138,10 +138,10 @@ public class EditorActivity extends AppCompatActivity {
         long rowID = database.insert(PetEntry.TABLE_NAME, null, values);
 
         if (rowID != -1) {
-            Toast.makeText(this, "Pet saved with row ID: " + rowID, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.pet_saved, Toast.LENGTH_LONG).show();
         }
         else {
-            Toast.makeText(this, "Error unalble to save pet!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.pet_not_saved, Toast.LENGTH_LONG).show();
         }
     }
 
