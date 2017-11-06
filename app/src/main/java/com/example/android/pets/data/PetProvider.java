@@ -7,6 +7,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 import com.example.android.pets.data.PetContract.PetEntry;
 
@@ -15,6 +16,9 @@ import com.example.android.pets.data.PetContract.PetEntry;
  */
 
 public class PetProvider extends ContentProvider {
+
+    /** Tag for the log messages */
+    public static final String LOG_TAG = PetProvider.class.getSimpleName();
 
 
     /** URI matcher code for the content URI for the pets table */
@@ -42,9 +46,6 @@ public class PetProvider extends ContentProvider {
     }
 
     private PetDbHelper mDbHelper;
-
-    /** Tag for the log messages */
-    public static final String LOG_TAG = PetProvider.class.getSimpleName();
 
     /**
      * Initialize the provider and the database helper object.
@@ -129,7 +130,11 @@ public class PetProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         // TODO: Insert a new pet into the pets database table with the given ContentValues
-        uri = getContentResolver().insert
+        long id = database.insert(PetEntry.TABLE_NAME, null, values);
+        if (id == -1) {
+            Log.e(LOG_TAG, "Insertion ID: " + id);
+        }
+
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
         return ContentUris.withAppendedId(uri, id);
