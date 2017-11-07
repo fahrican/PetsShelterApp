@@ -186,10 +186,42 @@ public class PetProvider extends ContentProvider {
      */
     private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
+        if (values.size() == 0) {
+            return 0;
+        }
+
         // TODO: Update the selected pets in the pets database table with the given ContentValues
+        if (values.containsKey(PetEntry.COLUMN_PET_NAME)){
+
+            String petName = values.getAsString(PetEntry.COLUMN_PET_NAME);
+            if (petName == null) {
+                throw new IllegalArgumentException("Pet name can't be null!");
+            }
+        }
+
+        if (values.containsKey(PetEntry.COLUMN_PET_GENDER)){
+
+            Integer gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+            if (gender == null || !PetEntry.isValidGender(gender)) {
+                throw new IllegalArgumentException("Pet requires a gender!");
+            }
+        }
+
+        if (values.containsKey(PetEntry.COLUMN_PET_WEIGHT)){
+
+            Integer weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+            if (weight == null || weight < 0) {
+                throw new IllegalArgumentException("Pet requires a valid weight!");
+            }
+        }
+
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        int rows = database.update(PetEntry.TABLE_NAME, values, selection, selectionArgs);
+        Log.v(LOG_TAG, "Updated rows: " + rows);
 
         // TODO: Return the number of rows that were affected
-        return 0;
+        return rows;
     }
 
 
@@ -198,7 +230,23 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+
+        // Get writeable database
+        SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                // Delete all rows that match the selection and selection args
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            case PET_ID:
+                // Delete a single row given by the ID in the URI
+                selection = PetEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
     }
 
     /**
@@ -206,7 +254,16 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public String getType(Uri uri) {
-        return null;
+
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return PetEntry.CONTENT_LIST_TYPE;
+            case PET_ID:
+                return PetEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 
 }//end of PetProvider class
