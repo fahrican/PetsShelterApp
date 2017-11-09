@@ -15,6 +15,7 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -75,12 +76,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         petListView.setAdapter(mCursorAdapter);
 
         //setuo a click listener
-        /*petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
 
+                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+
+                //here we create the URI for the specific pet item
+                Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
+                //than the intent set's the URI
+                intent.setData(currentPetUri);
+
+                startActivity(intent);
             }
-        });*/
+        });
 
         getLoaderManager().initLoader(PET_LOADER, null, this);
     }
