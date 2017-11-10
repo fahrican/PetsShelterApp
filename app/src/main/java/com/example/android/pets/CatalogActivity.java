@@ -46,6 +46,8 @@ import com.example.android.pets.data.PetContract.PetEntry;
  */
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
+    private static final String LOG_TAG = CatalogActivity.class.getSimpleName();
+
     private PetCursorAdapter mCursorAdapter;
 
     private static final int PET_LOADER = 0;
@@ -122,6 +124,13 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
     }
 
+    // method deletes all pets from PetEntry content URI
+    private void deleteAllPets(){
+
+        long rowsDeleted = getContentResolver().delete(PetEntry.CONTENT_URI, null, null);
+        Log.v(LOG_TAG, "deleted rows: " + rowsDeleted);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
@@ -140,7 +149,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
-                // Do nothing for now
+                deleteAllPets();
                 return true;
         }
         return super.onOptionsItemSelected(item);

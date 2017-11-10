@@ -484,6 +484,6 @@ public class EditorActivity extends AppCompatActivity implements
 
         // Close the activity
         finish();
-    
+
     }
 }

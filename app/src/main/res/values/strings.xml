@@ -46,6 +46,8 @@
     <!-- Text hint for breed field in the editor [CHAR LIMIT=30] -->
     <string name="hint_pet_breed">Breed</string>
 
+    <string name="unknown_pet_breed">Unknown breed</string>
+
     <!-- Text hint for name field in the editor [CHAR LIMIT=30] -->
     <string name="hint_pet_weight">Weight</string>
 
